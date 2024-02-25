@@ -1,38 +1,29 @@
 <main class="lista-vacantes">
-    <h2>Lista de vacantes</h2>
+    <h2>Job lists</h2>
 
-    <div class="vacante">
-        <div class="caja">
-            <h3>Facebook</h3>
-            <p class="puesto">React Developer</p>
-        </div>
-        <div class="caja">
-            <p class="etiqueta">Ubicación</p>
-            <p class="nombre">Remoto</p>
-        </div>
-        <div class="caja">
-            <p class="etiqueta">Contrato</p>
-            <p class="nombre contrato">Tiempo Completo</p>
-        </div>
-        <div class="caja centrar-vertical">
-            <a href="#" class="btn btn-verde">Más Info</a>
-        </div>
-    </div>
-    <div class="vacante">
-        <div class="caja">
-            <h3>AirBnB</h3>
-            <p class="puesto">NodeJS Developer</p>
-        </div>
-        <div class="caja">
-            <p class="etiqueta">Ubicación</p>
-            <p class="nombre">Remoto</p>
-        </div>
-        <div class="caja">
-            <p class="etiqueta">Contrato</p>
-            <p class="nombre contrato">Tiempo Completo</p>
-        </div>
-        <div class="caja centrar-vertical">
-            <a href="#" class="btn btn-verde">Más Info</a>
-        </div>
-    </div>
+    {{#if vacantes.length}}
+        {{#each vacantes}}
+            <div class="vacante">
+                <div class="caja">
+                    <h3>{{company}}</h3>
+                    <p class="puesto">{{title}}</p>
+                </div>
+                <div class="caja">
+                    <p class="etiqueta">Ubication</p>
+                    <p class="nombre">{{ubication}}</p>
+                </div>
+                <div class="caja">
+                    <p class="etiqueta">Contract</p>
+                    <p class="nombre contrato">{{contract}}</p>
+                </div>
+                <div class="caja centrar-vertical">
+                    <a href="/vacancies/{{url}}" class="btn btn-verde">More Info</a>
+                </div>
+            </div>
+        {{/each}}
+
+    {{else}}
+        <p>There is not vacancys</p>
+    {{/if}}
+    
 </main>

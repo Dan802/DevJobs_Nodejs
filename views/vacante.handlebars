@@ -1,0 +1,46 @@
+<div class="contenido-superior vacante contenedor">
+    <div class="caja">
+        <div class="etiqueta">
+            <p class="etiqueta">Company</p>
+            <p class="nombre">{{vacante.company}}</p>
+        </div>
+    </div>
+    <div class="caja">
+        <div class="etiqueta">
+            <p class="etiqueta">Ubication</p>
+            <p class="nombre">{{vacante.ubication}}</p>
+        </div>
+    </div>
+    <div class="caja">
+        <div class="etiqueta">
+            <p class="etiqueta">Contract</p>
+            <p class="nombre">{{vacante.contract}}</p>
+        </div>
+    </div>
+    <div class="caja">
+        <div class="etiqueta">
+            <p class="etiqueta">Salary</p>
+            <p class="nombre">${{vacante.salary}}</p>
+        </div>
+    </div>
+</div>
+
+<div class="vacante-contenedor contenedor">
+    <main class="contenido">
+        <h2>Position's Description</h2>
+        <div class="vacante-descripcion">
+            {{{vacante.description}}}
+        </div>
+
+        <a href="/vacancies/edit/{{vacante.url}}" class="btn btn-azul editar-btn">Edit Vacancy</a>
+    </main>
+
+    <aside class="sidebar">
+        <h2>Necessary knowledge</h2>
+        <ul class="skills">
+            {{#each vacante.skills}}
+                <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    </aside>
+</div>

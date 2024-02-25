@@ -2,36 +2,35 @@ import mongoose from 'mongoose'
 import shortid from 'shortid'
 import slug from 'slug'
 
-
 mongoose.Promise = global.Promise
 
 const { Schema } = mongoose;
 
 const vacantesSchema = new Schema({
-    titulo: {
+    title: {
         type: String, 
-        required: 'El nombre de la vacante es obligatorio',
+        required: 'The name of the position is required',
         trim: true
     },
-    empresa: {
+    company: {
         type: String,
         trim: true
     },
-    ubicacion: {
+    ubication: {
         type: String, 
         trime: true,
-        required: 'La ubicación es obligatoria'
+        required: 'The ubication is required'
     },
-    salario: {
+    salary: {
         type: String,
         default: 0,
         trim: true
     },
-    contrato: {
+    contract: {
         type: String,
         trim: true
     },
-    descipcion: {
+    description: {
         type: String,
         trim: true
     },
@@ -40,18 +39,18 @@ const vacantesSchema = new Schema({
         lowercase: true
     },
     skills: [String],
-    candidatos : [{
-        nombre: String, 
-        email: String, 
-        cv: String
+    candidates : [{
+        nameCandidate: String, 
+        emailCandidate: String, 
+        cvCandidate: String
     }]
 })
 
 vacantesSchema.pre('save', function(next){
 
-    // Crear la url
-    const url = slug(this.titulo); // slug: Make strings URL-safe, whitout especial charset
-    this.url = `${url}-${shortid.generate()} ` 
+    // Crear una url unica para cada vacante
+    const url = slug(this.title); // slug: Make strings URL-safe, whitout especial charset
+    this.url = `${url}-${shortid.generate()}` 
 
     next();
 })

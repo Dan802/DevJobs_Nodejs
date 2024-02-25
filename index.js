@@ -1,4 +1,5 @@
 import './config/db.js'
+
 import express from 'express'
 import { engine } from 'express-handlebars'
 import * as path from 'path'
@@ -11,7 +12,7 @@ import Handlebars from "handlebars";
 
 // ----- Archivos
 import router from './routes/index.js'
-import { seleccionarSkills } from './helpers/handlebarsHelper.js'
+import { seleccionarSkills, tipoContrato } from './helpers/handlebarsHelper.js'
 
 const app = express()
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -32,11 +33,13 @@ app.set("views", path.resolve(__dirname, "./views"));
 
 // Helper handlebar
 Handlebars.registerHelper('seleccionarSkills', seleccionarSkills)
+Handlebars.registerHelper('tipoContrato', tipoContrato)
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public'))) //Profe
 // app.use(express.static("public/")); // express-handlebars
 
+// Rutas del proyecto
 app.use('/', router)
 
 // express session

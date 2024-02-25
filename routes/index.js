@@ -7,7 +7,14 @@ const router = express.Router()
 router.get('/', homeController.mostrarTrabajos)
 
 // Crear Vacantes
-router.get('/vacantes/nueva', vacantesController.formularioNuevaVacante)
-router.post('/vacantes/nueva', vacantesController.agregarVacante)
+router.get('/vacancies/new', vacantesController.formularioNuevaVacante)
+router.post('/vacancies/new', vacantesController.agregarVacante)
+
+// Mostrar Vacante
+router.get('/vacancies/:url', vacantesController.mostrarVacante)
+
+// Editar Vacante
+router.get('/vacancies/edit/:url', vacantesController.formEditarVacante)
+router.post('/vacancies/edit/:url', vacantesController.editarVacante)
 
 export default router

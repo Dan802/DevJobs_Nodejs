@@ -1,26 +1,26 @@
 <main class="contenedor">
-    <form action="/vacantes/nueva" method="POST" class="default-form">
-        <h3>Información General</h3>
+    <form action="/vacancies/new" method="POST" class="default-form">
+        <h3>General Information</h3>
 
         <div class="campo">
-            <label for="titulo">Titulo</label>
-            <input type="text" name="titulo" id="titulo" placeholder="Ej: React Developer" required>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" placeholder="Ej: React Developer" required>
         </div>
         <div class="campo">
-            <label for="empresa">Empresa</label>
-            <input type="text" name="empresa" id="empresa" placeholder="Empresa que Contrata" required>
+            <label for="company">Company</label>
+            <input type="text" name="company" id="company" placeholder="Company's name that is hiring" required>
         </div>
         <div class="campo">
-            <label for="ubicacion">Ubicación</label>
-            <input type="text" name="ubicacion" id="ubicacion" placeholder="Ciudad, País" required>
+            <label for="ubication">Ubication</label>
+            <input type="text" name="ubication" id="ubication" placeholder="Ciudad, País" required>
         </div>
         <div class="campo">
-            <label for="salario">Salario (USD)</label>
-            <input type="text" name="salario" id="salario" placeholder="Ej: $550" required>
+            <label for="salary">Salary (USD)</label>
+            <input type="text" name="salary" id="salary" placeholder="Ej: $550" required>
         </div>
         <div class="campo">
-            <label for="contrato">Contrato</label>
-            <select name="contrato" id="contrato">
+            <label for="contract">Contract</label>
+            <select name="contract" id="contract">
                 <option value="0" disabled selected>-- Selecciona --</option>
                 <option value="Freelance">Freelance</option>
                 <option value="Tiempo Completo">Tiempo Completo</option>
@@ -29,25 +29,25 @@
             </select>
         </div>
 
-        <h3>Descripción del Puesto</h3>
+        <h3>Job Description</h3>
 
         <div class="campo descripcion">
-            <label for="">Descripción del puesto</label>
-            <input id="x" type="hidden" name="descripcion">
+            <label for="">Job Description</label>
+            <input id="x" type="hidden" name="description">
             <trix-editor input="x"></trix-editor>
         </div>
 
-        <h3>Conocimientos</h3>
+        <h3>Necessary knowledge</h3>
 
         <ul class="lista-conocimientos">
-            {{#seleccionarSkills a}}
+            {{#seleccionarSkills "[]"}}
                 {{{html}}}
             {{/seleccionarSkills}}
         </ul>
 
         <div class="campo centrar-horizontal">
             <input type="hidden" name="skills" id="skills">
-            <input type="submit" value="Publicar" class="btn btn-azul">
+            <input type="submit" value="Post" class="btn btn-azul">
         </div>
 
     </form>

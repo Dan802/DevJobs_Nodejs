@@ -5,11 +5,23 @@ export function seleccionarSkills(seleccionadas = [], opciones) {
     let html = ""
 
     skills.forEach(skill => {
-        html += `<li>${skill}</li>`
+        html += `<li ${seleccionadas.includes(skill) ? 'class="activo"' : ''}>${skill}</li>`
     })
 
+    // opciones.fn() es lo que irá dentro de {{#seleccionarskill}}s en el archivo de views
+    // opciones.fn() esta mas relacionado a handlebars que a js vanilla
     return opciones.fn({html});
-    return html;
-    return opciones.fn().html = html;
+
+    // return opciones.fn().html = html;
+}
+
+export function tipoContrato (seleccionado, opciones) {
+
+    const expresionRegular = new RegExp(`value="${seleccionado}"`) 
+
+    // opciones.fn(this) // Es el cuerpo que hay una vez llamada la funcion en views handlebars
+    // $& simil to += o [...original]
+    // return: Volvemos a devolver el mismo cuerpo pero con una opcion seleccionada
+    return opciones.fn(this).replace(expresionRegular, '$& selected = "selected"') 
 }
 
