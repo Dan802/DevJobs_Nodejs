@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', iniciar)
 function iniciar() {
 
     const skills = document.querySelector('.lista-conocimientos')
+    const alertas = document.querySelector('.alertas')
 
     if(skills) {
 
@@ -18,6 +19,11 @@ function iniciar() {
 
         // Una vez que estamos en editar, llamar la función (para que se añadan los skills automaticamente al value hidden)
         skillsSeleccionados()
+    }
+
+    if(alertas){
+        // Limpiar/desaparecer las alertas
+        limpiarAlertas()
     }
 }
 
@@ -56,4 +62,34 @@ function skillsSeleccionados() {
     
     // inyectarlo al input:hidden
     document.querySelector('#skills').value = skillsArray
+}
+
+function limpiarAlertas() {
+
+    // div padre de alertas
+    const alertas = document.querySelector('.alertas')
+
+    // setInterval = while pero cada loop con tiempo definido
+    const interval = setInterval(() => {
+
+        // Div de cada alerta singular
+        const alertaDiv = document.querySelectorAll('.alertas .alerta')
+        
+        if(alertas.children.length > 0) {
+
+            // Lo desaparecemos con CSS
+            alertaDiv[0].classList.toggle('invisible') //toma 1s
+
+            // Lo eliminamos del HTML
+            setTimeout(() => {
+                alertas.removeChild(alertas.children[0]);
+            }, 1010);
+
+        } else if(alertas.children.length === 0) {
+
+            alertas.parentElement.removeChild(alertas)
+            clearInterval(interval) // Salimos del loop
+
+        }
+    }, 2000);
 }

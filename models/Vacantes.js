@@ -3,7 +3,6 @@ import shortid from 'shortid'
 import slug from 'slug'
 
 mongoose.Promise = global.Promise
-
 const { Schema } = mongoose;
 
 const vacantesSchema = new Schema({

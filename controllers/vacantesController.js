@@ -1,5 +1,5 @@
+// Importar modelo de la base de datos
 import mongoose from "mongoose"
-
 const Vacante = mongoose.model('Vacante')
 
 function formularioNuevaVacante(req, res) {

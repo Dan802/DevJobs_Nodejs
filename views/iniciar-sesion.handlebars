@@ -1,0 +1,21 @@
+<main class="contenedor">
+    <form action="/login" method="POST" class="default-form">
+        <div class="campo">
+            <label for="email">Email</label>
+            <input type="email" name="email" placeholder="Your Email" >
+            {{!-- PONER REQUIRED --}}
+        </div>
+        <div class="campo">
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Your password" >
+            {{!-- PONER REQUIRED --}}
+        </div>
+        <div class="campo acciones">
+            <a href="/create-account">Create an account</a>
+            <a href="/reset-password">Forgot my password</a>
+        </div>
+        <div class="campo">
+            <input type="submit" value="Login" class="btn btn-azul">
+        </div>
+    </form>
+</main>

@@ -466,6 +466,7 @@ p.candidatos {
     text-transform: uppercase;
     font-weight: 700;
     margin-top: .3rem;
+    opacity: 1;
 }
 .correcto {
     background-color: #00C897;
@@ -476,7 +477,12 @@ p.candidatos {
 .desaparecer {
     opacity: 0;
 }
-
+.invisible {
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 1s;
+    /* transition-delay: 1s; */
+}
 
 
 /** Biografia Vacante **/

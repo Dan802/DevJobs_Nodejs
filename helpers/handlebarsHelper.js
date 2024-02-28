@@ -11,8 +11,7 @@ export function seleccionarSkills(seleccionadas = [], opciones) {
     // opciones.fn() es lo que irá dentro de {{#seleccionarskill}}s en el archivo de views
     // opciones.fn() esta mas relacionado a handlebars que a js vanilla
     return opciones.fn({html});
-
-    // return opciones.fn().html = html;
+    //// return opciones.fn().html = html; // obsolet
 }
 
 export function tipoContrato (seleccionado, opciones) {
@@ -25,3 +24,25 @@ export function tipoContrato (seleccionado, opciones) {
     return opciones.fn(this).replace(expresionRegular, '$& selected = "selected"') 
 }
 
+export function mostrarAlertas(errores =  {}, alertas) {
+
+    // errores = { loginErrors: ['', ''], logoutErrors: ['', '']} 
+    // Los errores se almacenan en los controladores con req.flash
+    // Los errores se envian en los controladores con res.render('vista', {mensajes: req.flash()})
+    // Y en main.handlebars esta la función para llamar a este middleware helper
+    
+    const categoria = Object.keys(errores)
+
+    let html = '';
+
+    if(categoria.length) {
+        errores[categoria].forEach(error => {
+            html += `
+            <div class="${categoria} alerta">
+                ${error}
+            </div>`
+        })
+    }
+
+    return alertas.fn({html})
+}
