@@ -2,13 +2,11 @@
     <form action="/login" method="POST" class="default-form">
         <div class="campo">
             <label for="email">Email</label>
-            <input type="email" name="email" placeholder="Your Email" >
-            {{!-- PONER REQUIRED --}}
+            <input type="email" name="email" placeholder="Your Email" required>
         </div>
         <div class="campo">
             <label for="password">Password</label>
-            <input type="password" name="password" placeholder="Your password" >
-            {{!-- PONER REQUIRED --}}
+            <input type="password" name="password" placeholder="Your password" required>
         </div>
         <div class="campo acciones">
             <a href="/create-account">Create an account</a>
