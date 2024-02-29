@@ -42,7 +42,12 @@ const vacantesSchema = new Schema({
         nameCandidate: String, 
         emailCandidate: String, 
         cvCandidate: String
-    }]
+    }],
+    autor: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Usuarios',
+        required: 'The author is required'
+    }
 })
 
 vacantesSchema.pre('save', function(next){

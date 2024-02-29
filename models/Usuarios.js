@@ -50,6 +50,7 @@ UsuarioSchema.post('save', function(error, doc, next) {
 
 // Autenticar Usuarios (Login)
 UsuarioSchema.methods = {
+    
     compararPassword: function(password) {
         return bcrypt.compareSync(password, this.password)
     }

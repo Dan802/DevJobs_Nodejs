@@ -5,6 +5,7 @@
     // const Usuarios = mongoose.model('Usuarios')
 
 import { body, validationResult } from 'express-validator'
+import passport from 'passport';
 
 
 function formCrearCuenta (req, res) {
@@ -42,18 +43,20 @@ async function validarRegistro(req, res, next) {
         body('confirm').escape(),
 
         // Verificamos que no esten vacios
-        body('userName').notEmpty().withMessage('El nombre es obligatorio'),
-        body('email').notEmpty().withMessage('El email es obligatorio'),
-        body('password').notEmpty().withMessage('El password es obligatorio'),
+        body('userName').notEmpty().withMessage('The name is required'),
+        body('email').notEmpty().withMessage('The email is required'),
+        body('password').notEmpty().withMessage('The password is required'),
         body('confirm').notEmpty().withMessage('Confirmar password es obligatorio'),
 
-        body('email').isEmail().withMessage('Ingrese un email valido'),
+        body('email').isEmail().withMessage('Enter a valid email'),
         body('email').normalizeEmail(),
         body('confirm').equals(req.body.password).withMessage('Los passwords no son iguales')
     ];
 
+    // Añadimos los errores al req
     await Promise.all(rules.map(validation => validation.run(req)));
 
+    // Y luego los validamos
     const errores = validationResult(req);
 
     if (!errores.isEmpty()) {
@@ -86,14 +89,14 @@ async function validarRegistro(req, res, next) {
         req.flash('error', errorMessages)
         
         // Mandamos a la misma página y visualizamos los errores con un helper
-        res.render('crear-cuenta', {
+        return res.render('crear-cuenta', {
             page: 'Create an account on DevJobs',
             tagline: 'Start recruiting new talents for free, just create an account',
             mensajes: req.flash()
         })
-    } else {
-        next() // next to crearUsuario
-    }
+    } 
+
+    next() // next to crearUsuario
 }
 
 async function crearUsuaurio (req, res) {
@@ -128,9 +131,100 @@ function formIniciarSesion(req, res) {
     })
 }
 
+// form editar el perfil
+function formEditarPerfil(req, res) {
+
+    res.render('editar-perfil', {
+        page: 'Edit your profile in DevJobs',
+        usuario: req.user.toObject(),
+        cerrarSesion: true,
+        nombre: req.user.userName
+    })
+}
+
+// Guardar cambios editar perfil
+async function editarPerfil(req, res) {
+
+    const usuario = await Usuarios.findById(req.user._id)
+
+    // Verificar la contraseña
+    const verificarPass = usuario.compararPassword(req.body.password)
+
+    if(!verificarPass) {
+        req.flash('error', 'The password is incorrect')
+        return res.redirect('/edit-profile')
+    }
+
+    // Verificar que el correo no pertenezca a otro usuario
+    if(usuario.email != req.body.email) { // Si el correo es diferente entonces...
+
+        const usuario = await Usuarios.findOne({ email: req.body.email })
+
+        if(usuario) {
+            req.flash('error', 'There is already a user with this email')
+            return res.redirect('/edit-profile')
+        }
+    }
+
+    // Modificamos a usuario con los valores del req.body
+    usuario.userName = req.body.userName 
+    usuario.email = req.body.email 
+
+    await usuario.save();
+    req.flash('correcto', 'The changes were made correctly')
+    res.redirect('/admin')
+}
+
+// Sanitizar y validar el formulario de editar perfiles
+async function validaPerfil(req, res, next) {
+
+    const rules = [
+        //Sanitizamos los datos
+        body('userName').escape(),
+        body('email').escape(),
+        body('password').escape(),
+
+        // Verificamos que no esten vacios
+        body('userName').notEmpty().withMessage('The name is required'),
+        body('email').notEmpty().withMessage('The email is required'),
+        body('password').notEmpty().withMessage('The password is required'),
+
+        body('email').isEmail().withMessage('Enter a valid email'),
+        body('email').normalizeEmail(),
+    ];
+
+    // Añadimos los errores al req
+    await Promise.all(rules.map(validation => validation.run(req)));
+
+    // Y luego los validamos
+    const errores = validationResult(req);
+
+    if (!errores.isEmpty()) {
+        
+        const errorMessages =  errores.array().map(error => error.msg)
+               
+        //Añadimos los errores al req.flash
+        req.flash('error', errorMessages)
+        
+        // Mandamos a la misma página y visualizamos los errores con un helper
+        return res.render('editar-perfil', {
+            page: 'Edit your profile in DevJobs',
+            usuario: req.user.toObject(),
+            cerrarSesion: true,
+            nombre: req.user.userName,
+            mensajes: req.flash()
+        })
+    } 
+
+    next() // next to crearUsuario
+}
+
 export default {
     formCrearCuenta,
     validarRegistro,
     crearUsuaurio,
-    formIniciarSesion
+    formIniciarSesion,
+    formEditarPerfil,
+    editarPerfil,
+    validaPerfil
 }

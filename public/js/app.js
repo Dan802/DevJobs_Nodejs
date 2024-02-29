@@ -1,3 +1,5 @@
+import axios from "axios"
+import Swal from "sweetalert2"
 // import Trix from "trix"
 
 // document.addEventListener("trix-before-initialize", () => {
@@ -12,6 +14,7 @@ function iniciar() {
 
     const skills = document.querySelector('.lista-conocimientos')
     const alertas = document.querySelector('.alertas')
+    const vacantesListado = document.querySelector('.panel-administracion')
 
     if(skills) {
 
@@ -24,6 +27,10 @@ function iniciar() {
     if(alertas){
         // Limpiar/desaparecer las alertas
         limpiarAlertas()
+    }
+
+    if(vacantesListado) {
+        vacantesListado.addEventListener('click', accionesListado)
     }
 }
 
@@ -92,4 +99,64 @@ function limpiarAlertas() {
 
         }
     }, 2000);
+}
+
+// Elimina Vacantes
+function accionesListado(e) {
+
+    if(e.target.dataset.eliminar) {
+        e.preventDefault()
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                // Enivar petición por medio de axios
+                const url = `${location.origin}/vacancies/delete/${e.target.dataset.eliminar}`
+
+                // Axios para eliminar el registro
+                // axios.delete(url , Axios options)
+                // https://masteringjs.io/tutorials/axios/options
+
+                // params: POJO or URLSearchParams that Axios will use as the query string, in this case, URLSearchParams = ${e.target.dataset.eliminar}
+                // Equivalent to `axios.delete('https://http://localhost:3000/admin/65dec62084a5b27292da6ebf')`
+                axios.delete(url, {params: {url}})
+                    .then(function(respuesta) {
+
+                        // La respuesta la mandamos desde vacantesController.js
+                        
+                        if(respuesta.status === 200) {
+                            
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: respuesta.data,
+                                icon: "success"
+                            }).then(() => {
+                                
+                                // Eliminar del DOM
+                                e.target.parentElement.parentElement.remove()
+    
+                                window.location = `${location.origin}/admin`;
+                            })
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire({
+                            type: 'error',
+                            title: 'There was an error',
+                            text: "The position couldn't be deleted",
+                            icon: "error"
+                        })
+                    })
+            }
+        });
+    }
 }

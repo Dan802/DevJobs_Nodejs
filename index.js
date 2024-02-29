@@ -7,15 +7,14 @@ import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import session from 'express-session' // Since version 1.5.0, the cookie-parser middleware no longer needs to be used for this module to work.
 import MongoStore from 'connect-mongo'
-import dotenv from 'dotenv'
-import Handlebars from "handlebars"
-import flash from 'connect-flash'
-import passport from 'passport'
+import dotenv from 'dotenv' // Variables de Entorno Seguras
+import Handlebars from "handlebars" // view template
+import flash from 'connect-flash' // Alertas/mensajes mediante res.locals.mensajes
+import passport from 'passport' // Autenticar y guardar la sesión de un usuario
 
 // ----- Archivos
 import router from './routes/index.js'
 import { seleccionarSkills, tipoContrato, mostrarAlertas } from './helpers/handlebarsHelper.js'
-
 import config_passport from './config/passport.js'
 
 const app = express()

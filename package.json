@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./index",
+    "start": "nodemon ./index",
     "watch": "webpack --watch",
-    "start": "concurrently \"npm run dev\" \"npm run watch\" "
+    "dev": "concurrently \"npm run dev\" \"npm run watch\" "
   },
   "repository": {
     "type": "module",
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/Dan802/DevJobsNodeJs#readme",
   "dependencies": {
+    "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "concurrently": "^8.2.2",
     "connect-flash": "^0.1.1",
@@ -43,7 +44,8 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "shortid": "^2.2.16",
-    "slug": "^8.2.3"
+    "slug": "^8.2.3",
+    "sweetalert2": "^11.10.5"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
