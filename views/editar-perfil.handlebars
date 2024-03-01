@@ -1,17 +1,21 @@
 <div class="contenedor">
-    <form action="/edit-profile" method="POST" class="default-form">
+    <form action="/edit-profile" method="post" enctype="multipart/form-data" class="default-form">
     
         <div class="campo">
             <label for="userName">Name</label>
-            <input type="text" name="userName" value="{{usuario.userName}}" placeholder="Your name" >
+            <input type="text" name="userName" value="{{usuario.userName}}" placeholder="Your name" required>
         </div>
         <div class="campo">
             <label for="email">Email</label>
-            <input type="email" name="email" value="{{usuario.email}}" placeholder="Your email" >
+            <input type="email" name="email" value="{{usuario.email}}" placeholder="Your email" required>
         </div>
         <div class="campo">
             <label for="password">Current password</label>
-            <input type="password" name="password" placeholder="Your password" >
+            <input type="password" name="password" placeholder="Your password" required>
+        </div>
+        <div class="campo">
+            <label for="avatar">Imagen</label>
+            <input type="file" name="uploaded_file">
         </div>
         <div class="campo">
             <input type="submit" class="btn btn-azul" value="Save Changes">

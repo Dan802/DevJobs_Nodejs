@@ -21,7 +21,8 @@ const UsuarioSchema = new mongoose.Schema({
         trim: true
     },
     token: String,
-    expira: Date
+    expira: Date,
+    imagen: String
 })
 
 // Método para hashear los passwords

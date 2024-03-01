@@ -36,6 +36,7 @@ router.get('/admin', authController.verificarUsuario, authController.mostrarPane
 
 // Editar perfil
 router.get('/edit-profile', authController.verificarUsuario, usuariosController.formEditarPerfil)
-router.post('/edit-profile', authController.verificarUsuario, usuariosController.validaPerfil, usuariosController.editarPerfil)
+// router.post('/edit-profile', authController.verificarUsuario, usuariosController.validaPerfil, usuariosController.editarPerfil)
+router.post('/edit-profile', authController.verificarUsuario, usuariosController.subirImagen , usuariosController.editarPerfil)
 
 export default router

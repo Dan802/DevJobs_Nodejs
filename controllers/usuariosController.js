@@ -1,12 +1,68 @@
-// Importar modelo de la base de datos
-    import Usuarios from "../models/Usuarios.js"
-// O también:
-    // import mongoose from "mongoose"
-    // const Usuarios = mongoose.model('Usuarios')
-
+import multer from "multer";
 import { body, validationResult } from 'express-validator'
-import passport from 'passport';
+import shortid from "shortid";
+import { UUID } from "mongodb"; // Para ids mas únicos
+import { fileURLToPath } from 'url'
 
+// Importar modelo de la base de datos
+import Usuarios from "../models/Usuarios.js"
+// import mongoose from "mongoose"
+// const Usuarios = mongoose.model('Usuarios')
+
+// Subir imagen con multer
+function subirImagen(req, res, next) {
+
+    const filePath = fileURLToPath(new URL('../public/uploads/perfiles', import.meta.url)) // root\public\uploads\perfiles
+
+    const fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, filePath)
+        },
+        filename: (req, file, cb) => {
+            const extension = file.mimetype.split('/')[1]
+
+            // callback( error, nombre del archivo)
+            cb(null, `${shortid.generate()}.${extension}`)
+        }
+    })
+    
+    const configuracionMulter = { 
+        storage: fileStorage,
+        fileFiltre(req, file, cb) {
+            if(file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+                cb(null, true)
+            } else {
+                cb(null, false)
+            }
+        },
+        limits : {fileSize : 3000000 } // (3Mb) For multipart forms, the max file size (in bytes).
+    }
+    
+    const upload = multer(configuracionMulter).single('uploaded_file')
+   
+    // upload llama a la constante upload, que llama a multer con la ocnfiguracionMulter...
+    upload(req, res, function(error) {
+        if(error) {
+            if(error instanceof multer.MulterError) {
+                if(error.code === 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'El archivo es muy grande: Máximo 100kb ');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            res.redirect('/admin');
+            return;
+        } else {
+            return next();
+        }
+    });
+
+    // para ver cosas relacionadas a multer
+    // console.log(req.file) 
+    // pero debe ser en el siguiente middleware
+}
 
 function formCrearCuenta (req, res) {
 
@@ -166,6 +222,11 @@ async function editarPerfil(req, res) {
         }
     }
 
+    // Subir la imagen
+    if(req.file) {
+        usuario.imagen = req.file.filename
+    }
+
     // Modificamos a usuario con los valores del req.body
     usuario.userName = req.body.userName 
     usuario.email = req.body.email 
@@ -220,6 +281,7 @@ async function validaPerfil(req, res, next) {
 }
 
 export default {
+    subirImagen,
     formCrearCuenta,
     validarRegistro,
     crearUsuaurio,
