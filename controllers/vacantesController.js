@@ -11,7 +11,8 @@ function formularioNuevaVacante(req, res) {
         page: 'New Position',
         tagLine: 'Fill out the form and publish your job opening',
         cerrarSesion: true,
-        nombre: req.user.userName
+        nombre: req.user.userName,
+        imagen: req.user.imagen
     })
 }
 
@@ -37,10 +38,12 @@ async function agregarVacante(req, res) {
 async function mostrarVacante(req, res, next) {
 
     // const vacante = await Vacante.findOne({url: req.params.url }).exec()
-    const vacante = await Vacante.findOne({url: req.params.url}).lean()
-
+    const vacante = await Vacante.findOne({url: req.params.url}).populate('autor').lean()
+    
     if(!vacante) return next()
-
+    
+    vacante.autor.password = '' // Eliminamos la contraseña del creador de la vacante por seguridad
+    
     res.render('vacante', {
         vacante,
         page: vacante.title,
@@ -59,7 +62,8 @@ async function formEditarVacante(req, res, next) {
         vacante, 
         page: `Edit - ${vacante.title}`,
         cerrarSesion: true,
-        nombre: req.user.userName
+        nombre: req.user.userName,
+        imagen: req.user.imagen
     })
 
 }

@@ -29,7 +29,9 @@ async function mostrarPanel(req, res) {
         tagline: 'Create and manage your vacancies from here',
         vacantes,
         cerrarSesion: true,
-        nombre: req.user.userName
+        nombre: req.user.userName,
+        imagen : req.user.imagen
+
     })
 }
 

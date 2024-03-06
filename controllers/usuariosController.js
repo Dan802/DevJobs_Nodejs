@@ -28,31 +28,34 @@ function subirImagen(req, res, next) {
     
     const configuracionMulter = { 
         storage: fileStorage,
-        fileFiltre(req, file, cb) {
-            if(file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+        limits : {fileSize : 1000000 }, // (1Mb) For multipart forms, the max file size (in bytes).
+        fileFilter(req, file, cb) {
+            if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
                 cb(null, true)
             } else {
-                cb(null, false)
+                cb(new Error('The file must be an image (jpeg or png)'), false)
             }
-        },
-        limits : {fileSize : 3000000 } // (3Mb) For multipart forms, the max file size (in bytes).
+        }
     }
     
     const upload = multer(configuracionMulter).single('uploaded_file')
    
+    // TODO: revisar la subida de archivos mayores a 1mb y formato diferente
+
     // upload llama a la constante upload, que llama a multer con la ocnfiguracionMulter...
     upload(req, res, function(error) {
+
         if(error) {
             if(error instanceof multer.MulterError) {
                 if(error.code === 'LIMIT_FILE_SIZE') {
-                    req.flash('error', 'El archivo es muy grande: Máximo 100kb ');
+                    req.flash('error', 'The file is too big: Max 1Mb ');
                 } else {
                     req.flash('error', error.message);
                 }
             } else {
-                req.flash('error', error.message);
+                req.flash('error', error.message)
             }
-            res.redirect('/admin');
+            res.redirect('/edit-profile')
             return;
         } else {
             return next();
@@ -194,12 +197,16 @@ function formEditarPerfil(req, res) {
         page: 'Edit your profile in DevJobs',
         usuario: req.user.toObject(),
         cerrarSesion: true,
-        nombre: req.user.userName
+        nombre: req.user.userName,
+        imagen: req.user.imagen
     })
 }
 
 // Guardar cambios editar perfil
 async function editarPerfil(req, res) {
+
+    console.log(req.file)
+    console.log(req.flash)
 
     const usuario = await Usuarios.findById(req.user._id)
 
@@ -222,7 +229,7 @@ async function editarPerfil(req, res) {
         }
     }
 
-    // Subir la imagen
+    // Subir la imagen solo si existe
     if(req.file) {
         usuario.imagen = req.file.filename
     }
@@ -273,6 +280,7 @@ async function validaPerfil(req, res, next) {
             usuario: req.user.toObject(),
             cerrarSesion: true,
             nombre: req.user.userName,
+            imagen: req.user.imagen,
             mensajes: req.flash()
         })
     } 
@@ -290,3 +298,4 @@ export default {
     editarPerfil,
     validaPerfil
 }
+
