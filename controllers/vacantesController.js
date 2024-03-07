@@ -1,4 +1,8 @@
 import { body, validationResult } from 'express-validator'
+import multer from 'multer'
+import shortid from 'shortid'
+import { fileURLToPath } from 'url'
+
 
 // Importar modelo de la base de datos
 import mongoose from "mongoose"
@@ -150,8 +154,7 @@ async function eliminarVacante(req, res) {
     }
 }
 
-/**
- * Verifica el autor de una vacante
+/** Verifica el autor de una vacante
  * @param {*} vacante 
  * @param {*} usuario 
  * @returns bool  
@@ -164,6 +167,106 @@ function verificarAutor(vacante = {}, usuario = {}) {
     }
 }
 
+/** Subir archivos en PDF 
+ */
+function subirCV(req, res, next) {
+
+    const filePath = fileURLToPath(new URL('../public/uploads/cv', import.meta.url)) // root\public\uploads\perfiles
+
+    const fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, filePath)
+        },
+        filename: (req, file, cb) => {
+            const extension = file.mimetype.split('/')[1]
+
+            // callback( error, nombre del archivo)
+            cb(null, `${shortid.generate()}.${extension}`)
+        }
+    })
+    
+    const configuracionMulter = { 
+        storage: fileStorage,
+        limits : {fileSize : 1000000 }, // (1Mb) For multipart forms, the max file size (in bytes).
+        fileFilter(req, file, cb) {
+            //Revisamos por mimetype porque la extensión se puede cambiar
+            if(file.mimetype === 'application/pdf'){
+                cb(null, true)
+            } else {
+                cb(new Error('The file must be an PDF'), false)
+            }
+        }
+    }
+    
+    // single('') Ahí se pone el name del file en el formulario
+    const upload = multer(configuracionMulter).single('cv')
+
+    upload(req, res, function(error) {
+
+        if(error) {
+            if(error instanceof multer.MulterError) {
+                if(error.code === 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'The file is too big: Max 1Mb ');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message)
+            }
+            res.redirect('back') // Si detecta un error nos reenvia a la página donde se originó el error
+            return;
+        } else {
+            return next();
+        }
+    });
+}
+
+/** Almacenar los candidatos en al base de datos
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+async function contactar(req, res, next) {
+
+    const vacante = await Vacante.findOne({url: req.params.url})
+
+    if(!vacante) return next()
+
+    const nuevoCandidato = {
+        nameCandidate: req.body.userName,
+        emailCandidate : req.body.email,
+        cvCandidate: req.file.filename
+    }
+
+    // Almacenar la vacante
+    vacante.candidates.push(nuevoCandidato)
+    await vacante.save()
+
+    req.flash('correcto', 'Your cv was succesfully sent')
+    res.redirect('/')
+}
+
+async function mostrarCandidatos(req, res, next) {
+
+    const vacante = await Vacante.findById(req.params.id).lean()
+
+    if(!vacante) return next()
+
+    if(vacante.autor != req.user._id.toString()) {
+        return next()
+    }
+
+    console.log(vacante.candidates)
+
+    res.render('candidatos', {
+        page:  `Candidates of the position ${vacante.title}`,
+        cerrarSesion: true,
+        userName: req.user.userName,
+        imagen: req.user.imagen,
+        candidatos : vacante.candidates
+    })
+}
+
 export default {
     formularioNuevaVacante,
     agregarVacante,
@@ -171,5 +274,8 @@ export default {
     formEditarVacante,
     editarVacante,
     validarVacante,
-    eliminarVacante
+    eliminarVacante,
+    subirCV,
+    contactar,
+    mostrarCandidatos
 }

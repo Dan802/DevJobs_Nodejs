@@ -39,4 +39,10 @@ router.get('/edit-profile', authController.verificarUsuario, usuariosController.
 // router.post('/edit-profile', authController.verificarUsuario, usuariosController.validaPerfil, usuariosController.editarPerfil)
 router.post('/edit-profile', authController.verificarUsuario, usuariosController.subirImagen , usuariosController.editarPerfil)
 
+// Recibir mensajes de candidatos
+router.post('/vacancies/:url', vacantesController.subirCV, vacantesController.contactar )
+
+// Muestra los candidatos de una vacante
+router.get('/candidates/:id', authController.verificarUsuario, vacantesController.mostrarCandidatos)
+
 export default router

@@ -47,6 +47,26 @@
 
 <div class="contenedor datos-reclutador">
     <div class="enviar-datos">
+        <h2>Contact Recruiter</h2>
+        <p>Fill the next form and upload your cv</p>
+
+        <form action="/vacancies/{{vacante.url}}" enctype="multipart/form-data" method="POST" class="default-form">
+            <div class="campo">
+                <label for="userName">Name</label>
+                <input type="text" name="userName" placeholder="Your name">
+            </div>
+            <div class="campo">
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="Your email">
+            </div>
+            <div class="campo">
+                <label for="cv">CV (PDF)</label>
+                <input type="file" name="cv" accept="application/pdf">
+            </div>
+            <div class="campo">
+                <input type="submit" value="Send" class="btn btn-verde">
+            </div>
+        </form>
 
     </div>
 

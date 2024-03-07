@@ -1,6 +1,6 @@
-import multer from "multer";
+import multer from 'multer'
 import { body, validationResult } from 'express-validator'
-import shortid from "shortid";
+import shortid from 'shortid'
 import { UUID } from "mongodb"; // Para ids mas únicos
 import { fileURLToPath } from 'url'
 
@@ -28,16 +28,23 @@ function subirImagen(req, res, next) {
     
     const configuracionMulter = { 
         storage: fileStorage,
-        limits : {fileSize : 1000000 }, // (1Mb) For multipart forms, the max file size (in bytes).
+        limits : {fileSize:1000000}, // (1Mb) For multipart forms, the max file size (in bytes).
         fileFilter(req, file, cb) {
+            //Revisamos por mimetype porque la extensión se puede cambiar
             if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
                 cb(null, true)
             } else {
                 cb(new Error('The file must be an image (jpeg or png)'), false)
             }
+
+            const fileSize = parseInt(req.headers['content-length']);
+            if (fileSize > 148576) {
+                return cb(new Error('el archivo esta bien pesado'));
+            }
         }
     }
-    
+
+    // single('') Ahí se pone el name del file en el formulario
     const upload = multer(configuracionMulter).single('uploaded_file')
    
     // TODO: revisar la subida de archivos mayores a 1mb y formato diferente
