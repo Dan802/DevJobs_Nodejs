@@ -30,6 +30,10 @@ router.post('/create-account', usuariosController.validarRegistro, usuariosContr
 router.get('/login', usuariosController.formIniciarSesion)
 router.post('/login', authController.autenticarUsuario)
 router.get('/logout', authController.verificarUsuario, authController.cerrarSesion)
+router.get('/reset-password', authController.formReestablecerPassword)
+router.post('/reset-password', authController.enviarToken)
+router.get('/reset-password/:token', authController.reestablecerPassword)
+router.post('/reset-password/:token', authController.guardarPassword)
 
 // Panel de administración 
 router.get('/admin', authController.verificarUsuario, authController.mostrarPanel)
@@ -44,5 +48,8 @@ router.post('/vacancies/:url', vacantesController.subirCV, vacantesController.co
 
 // Muestra los candidatos de una vacante
 router.get('/candidates/:id', authController.verificarUsuario, vacantesController.mostrarCandidatos)
+
+// Buscador de vacantes
+router.post('/search', vacantesController.buscarVacantes)
 
 export default router

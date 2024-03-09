@@ -3,7 +3,6 @@ import multer from 'multer'
 import shortid from 'shortid'
 import { fileURLToPath } from 'url'
 
-
 // Importar modelo de la base de datos
 import mongoose from "mongoose"
 const Vacante = mongoose.model('Vacante')
@@ -267,6 +266,27 @@ async function mostrarCandidatos(req, res, next) {
     })
 }
 
+// Buscador de vacantes
+async function buscarVacantes(req, res) {
+
+    const vacantes = await Vacante.find({
+        $text: {
+            $search: req.body.q
+        }
+    }).lean()
+
+    const query = req.body.q
+    const queryCapitalize = query.charAt(0).toUpperCase() + query.slice(1) 
+
+    // mostrar las vacantes
+    res.render('home', {
+        page: `Results for the search ${queryCapitalize}`,
+        barra: true,
+        vacantes
+
+    })
+}
+
 export default {
     formularioNuevaVacante,
     agregarVacante,
@@ -277,5 +297,6 @@ export default {
     eliminarVacante,
     subirCV,
     contactar,
-    mostrarCandidatos
+    mostrarCandidatos,
+    buscarVacantes
 }

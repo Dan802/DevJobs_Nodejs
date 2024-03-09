@@ -14,9 +14,12 @@
             <input type="password" name="password" placeholder="Your password" required>
         </div>
         <div class="campo">
-            <label for="avatar">Imagen</label>
+            <label for="avatar">Image</label>
             <input type="file" name="uploaded_file">
             <img src="uploads/perfiles/{{usuario.imagen}}" class="admin-perfil" alt="">
+        </div>
+        <div class="campo">
+            <a href="/reset-password">Change your current password</a>
         </div>
         <div class="campo">
             <input type="submit" class="btn btn-azul" value="Save Changes">

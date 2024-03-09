@@ -202,6 +202,7 @@ function formEditarPerfil(req, res) {
 
     res.render('editar-perfil', {
         page: 'Edit your profile in DevJobs',
+        tagline: 'You can change your Name, Email, or Image',
         usuario: req.user.toObject(),
         cerrarSesion: true,
         nombre: req.user.userName,
@@ -284,6 +285,7 @@ async function validaPerfil(req, res, next) {
         // Mandamos a la misma página y visualizamos los errores con un helper
         return res.render('editar-perfil', {
             page: 'Edit your profile in DevJobs',
+            tagline: 'You can change your Name, Email, or Image',
             usuario: req.user.toObject(),
             cerrarSesion: true,
             nombre: req.user.userName,

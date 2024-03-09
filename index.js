@@ -11,6 +11,7 @@ import dotenv from 'dotenv' // Variables de Entorno Seguras
 import Handlebars from "handlebars" // view template
 import flash from 'connect-flash' // Alertas/mensajes mediante res.locals.mensajes
 import passport from 'passport' // Autenticar y guardar la sesión de un usuario
+import createHttpError from 'http-errors' // Crear http error xd
 
 // ----- Archivos
 import router from './routes/index.js'
@@ -75,6 +76,23 @@ Handlebars.registerHelper('mostrarAlertas', mostrarAlertas)
 
 // Rutas del proyecto
 app.use('/', router)
+
+// 404 página no existente 
+app.use((req, res, next) => {
+    next(createHttpError(404, 'Not found'))
+})
+
+// Administración de errores
+// El error siempre debe ser el primer parametro en el middleware
+app.use((error, req, res, next) => {
+    res.locals.mensaje = error.message
+
+    const status = error.status || 500
+    res.locals.status = status
+    res.status(status)
+
+    res.render('error')
+})
 
 // Definir puerto
 const port = process.env.PORT

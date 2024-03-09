@@ -59,4 +59,8 @@ vacantesSchema.pre('save', function(next){
     next();
 })
 
+// Crear un indice
+// Se recomienda para busquedas, por ejm, busqueda por titulo
+vacantesSchema.index({ title : 'text'})
+
 export default mongoose.model('Vacante', vacantesSchema)
